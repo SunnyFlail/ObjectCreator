@@ -25,6 +25,7 @@ final class ObjectCreator
     public function create(string $classFQCN): ObjectCreator
     {
         $creator = clone $this;
+        $classFQCN = '\\' . $classFQCN;
 
         try {
             $creator->reflection = new ReflectionClass($classFQCN);
