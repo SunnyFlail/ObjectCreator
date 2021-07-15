@@ -1,0 +1,12 @@
+{
+    "name": "sunnyflail/object-creator",
+    "description": "A simple class for building objects",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sunnyflail\\ObjectCreator\\": "src/"
+        }
+    },
+    "require": {}
+}
