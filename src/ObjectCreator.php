@@ -8,21 +8,12 @@ use InvalidArgumentException;
 use ReflectionException;
 use ReflectionClass;
 
-final class ObjectCreator
+final class ObjectCreator implements IObjectCreator
 {
     protected ?object $object = null;
     protected ReflectionClass $reflection;
 
-    /**
-     * Returns a copy of ObjectCreator with an object of provided class
-     * 
-     * @param string $classFQCN Fully qualified class name of the class
-     * 
-     * @return ObjectCreator copy of this
-     * 
-     * @throws ClassNotFoundException if class doesn't exist
-     */
-    public function create(string $classFQCN): ObjectCreator
+    public function create(string $classFQCN): IObjectCreator
     {
         $creator = clone $this;
         $classFQCN = '\\' . $classFQCN;
@@ -38,18 +29,7 @@ final class ObjectCreator
         return $creator;
     }
 
-    /**
-     * Sets object property to provided value
-     * 
-     * @param string $propertyName Name of the property
-     * @param mixed $value Value to set
-     * 
-     * @return ObjectCreator this
-     * 
-     * @throws Exception
-     * @throws InvalidArgumentException
-     */
-    public function withProperty(string $propertyName, mixed $value): ObjectCreator
+    public function withProperty(string $propertyName, mixed $value): IObjectCreator
     {
         if ($this->object === null) {
             throw new UninitialisedCreatorException();
@@ -69,13 +49,6 @@ final class ObjectCreator
         return $this;
     }
 
-    /**
-     * Returns an object with provided values
-     * 
-     * @return object
-     * 
-     * @throws Exception if object wasn't initialised beforehand
-     */
     public function getObject(): object
     {
         if ($this->object === null) {
