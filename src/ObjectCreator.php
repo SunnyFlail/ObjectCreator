@@ -7,11 +7,17 @@ use SunnyFlail\ObjectCreator\Exceptions\ClassNotFoundException;
 use InvalidArgumentException;
 use ReflectionException;
 use ReflectionClass;
+use ReflectionProperty;
+use SunnyFlail\ObjectCreator\Exceptions\InvalidTypeException;
+use SunnyFlail\Traits\GetTypesTrait;
 
 final class ObjectCreator implements IObjectCreator
 {
-    protected ?object $object = null;
-    protected ReflectionClass $reflection;
+
+    use GetTypesTrait;
+
+    private ?object $object = null;
+    private ReflectionClass $reflection;
 
     public function create(string $classFQCN): IObjectCreator
     {
@@ -44,9 +50,78 @@ final class ObjectCreator implements IObjectCreator
 
         $property = $this->reflection->getProperty($propertyName);
         $property->setAccessible(true);
+
+        try { 
+            $value = $this->updatePropertyType($property, $value);
+        } catch (InvalidTypeException) {
+            return $this;
+        }
+
         $property->setValue($this->object, $value);
 
         return $this;
+    }
+
+    /**
+     * Updates property type
+     * 
+     * @param ReflectionProperty $property
+     * @param mixed $value
+     * 
+     * @return mixed
+     * 
+     * @throws InvalidTypeException
+     */
+    private function updatePropertyType(ReflectionProperty $property, mixed $value): mixed
+    {
+        $types = $this->getTypeStrings($property);
+
+        if (!$types) {
+            return $value;
+        }
+
+        foreach ($types as $type) {
+            if ($type === 'mixed') {
+                return $value;
+            }
+            if ($type === 'int' && is_numeric($value)) {
+                return (int) $value;
+            }
+            if ($type === 'array' && is_array($value)) {
+                return $value;
+            }
+            if ($type === 'string' && is_string($value)) {
+                return $value;
+            }
+            if ($type === 'boolean') {
+                return boolval($value);
+            }
+            if (class_exists('\\' . $type)) {
+                if ($obj = $this->scrapeObject($type, $value)) {
+                    return $obj;
+                }
+            }
+        }
+
+        throw new InvalidTypeException();
+    }
+
+    private function scrapeObject(string $classFQCN, mixed $value): ?object
+    {
+        if ($value instanceof ('\\' . $classFQCN)) {
+            return $value;
+        }
+        if (!is_array($value)) {
+            return null;
+        }
+
+        $creator = $this->create($classFQCN);
+
+        foreach ($value as $property => $propValue) {
+            $creator->withProperty($property, $propValue);
+        }
+
+        return $creator->getObject();
     }
 
     public function getObject(): object

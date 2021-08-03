@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "107c06d3e7012b8020ba0f0a10be8784",
-    "packages": [],
+    "content-hash": "47dfa041fa482a6cf3c60569d1b747d2",
+    "packages": [
+        {
+            "name": "sunnyflail/typestring",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SunnyFlail/Typestring.git",
+                "reference": "980116c748e0065a905f85f5134d9f7cce911a4e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SunnyFlail/Typestring/zipball/980116c748e0065a905f85f5134d9f7cce911a4e",
+                "reference": "980116c748e0065a905f85f5134d9f7cce911a4e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SunnyFlail\\Traits\\": ""
+                },
+                "exclude-from-classmap": [
+                    "tests"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "SunnyFlail",
+                    "email": "sunny.flail@gmail.com"
+                }
+            ],
+            "description": "A simple trait for retrieving Reflection types as a string",
+            "support": {
+                "issues": "https://github.com/SunnyFlail/Typestring/issues",
+                "source": "https://github.com/SunnyFlail/Typestring/tree/1.0.0"
+            },
+            "time": "2021-06-04T22:37:12+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",

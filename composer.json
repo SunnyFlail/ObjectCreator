@@ -18,5 +18,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
+    },
+    "require": {
+        "sunnyflail/typestring": "^1.0"
     }
 }
